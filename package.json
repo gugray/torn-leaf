@@ -1,0 +1,17 @@
+{
+  "name": "torn-leaf",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "A torn leaf.",
+  "license": "MIT",
+  "author": {
+    "name": "Gábor L Ugray",
+    "email": "gabor.reads.this@gmail.com"
+  },
+  "dependencies": {
+    "twgl.js": "^5.5.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  }
+}

@@ -1,0 +1,5 @@
+public
+.DS_Store
+node_modules
+.idea
+yarn-error.log

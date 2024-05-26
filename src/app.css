@@ -1,0 +1,10 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; }
+html { background-color: #202020; }
+
+#webgl-canvas {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vmin; height: 100vmin;
+  background-color: black;
+}
