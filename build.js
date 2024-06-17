@@ -1,12 +1,12 @@
 import * as esbuild from "esbuild"
 import glsl from "./glsl-plugin.js"
 
-const port = 8080;
+const port = 8088;
 
 async function run() {
   const entryPoints = [
     "src/index.html",
-    "src/torn-leaf.jpg",
+    "src/image.jpg",
     "src/app.css",
     "src/app.js",
   ];

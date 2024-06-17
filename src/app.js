@@ -1,9 +1,12 @@
 import sSweepVert from "./shader/sweep-vert.glsl";
 import sOutputDrawFrag from "./shader/output-draw-frag.glsl";
-import sTornLeafFrag from "./torn-leaf.glsl";
+import sTornLeafFrag from "./displacement.glsl";
 import * as twgl from "twgl.js";
+import {unis, randProgram} from "./prog.js";
 
-const imageUrl = "torn-leaf.jpg";
+const imageUrl = "image.jpg";
+const animating = true;
+const progRefreshSec = 10;
 
 setTimeout(init, 50);
 
@@ -33,9 +36,14 @@ async function init() {
   });
   compilePrograms();
   await getImage();
+  updateRandomProgram();
   requestAnimationFrame(frame);
 }
 
+function updateRandomProgram() {
+  randProgram();
+  setTimeout(updateRandomProgram, progRefreshSec * 1000);
+}
 
 function resizeWorld() {
 
@@ -132,6 +140,9 @@ function frame(time) {
     resolution: [w, h],
     time: time,
   }
+  for (let uniName in unis)
+    unisMain[uniName] = unis[uniName];
+
   // Bind frame buffer: texture to draw on
   let atmsPR = [{attachment: txOutput1}];
   let fbufPR = twgl.createFramebufferInfo(gl, atmsPR, w, h);
@@ -164,5 +175,5 @@ function frame(time) {
   [txOutput0, txOutput1] = [txOutput1, txOutput0];
 
   // Schedule next frame
-  requestAnimationFrame(frame);
+  if (animating) requestAnimationFrame(frame);
 }
