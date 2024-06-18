@@ -6,7 +6,8 @@ import {unis, randProgram} from "./prog.js";
 
 const imageUrl = "image.jpg";
 const animating = true;
-const progRefreshSec = 10;
+const progRefreshSec = 20;
+const progRefreshSecVar = 20;
 
 setTimeout(init, 50);
 
@@ -42,7 +43,8 @@ async function init() {
 
 function updateRandomProgram() {
   randProgram();
-  setTimeout(updateRandomProgram, progRefreshSec * 1000);
+  const waitSec = progRefreshSec + Math.random() * progRefreshSecVar;
+  setTimeout(updateRandomProgram, Math.round(waitSec * 1000));
 }
 
 function resizeWorld() {

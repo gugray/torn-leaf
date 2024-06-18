@@ -124,6 +124,7 @@ vec3 ctrl_BufColorShift(vec3 hsv, vec2 p) {
     float dst = length(p);
     hsv[0] = fract(hsv[0] + ctrl_BufColorShiftDistFreq * sin(dst));
     hsv[0] = fract(hsv[0] + ctrl_BufColorShiftStrength * cycle);
+    hsv[1] *= 0.95;
     hsv[2] = max(0.05, pow(hsv[2], 0.3) - 0.3);
     return hsv;
 }

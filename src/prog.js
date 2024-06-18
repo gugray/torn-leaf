@@ -29,13 +29,16 @@ function select(arr) {
 export function randProgram() {
   unis.ctrl_BufColorShiftFreq = select([0.0006, 0.0001, 0.000001]);
   unis.ctrl_BufColorShiftDistFreq = select([0.001, 0.01]);
-  unis.ctrl_BufColorShiftStrength = select([0.01, 0.03]);
+  unis.ctrl_BufColorShiftDistFreq = 0.001;
+  unis.ctrl_BufColorShiftStrength = select([0.014, 0.009]);
 
   const lessFeedback = Math.random() < 0.2;
   if (lessFeedback) {
     unis.ctrl_ColorDecay = 0.95;
     unis.ctrl_ColorSink = 0.1;
     unis.ctrl_ColorAdmix = 0.45;
+    unis.ctrl_BufColorShiftStrength = 0.14;
+    unis.ctrl_BufColorShiftFreq = 0.0006;
   }
   else {
     unis.ctrl_ColorDecay = 0.999;
