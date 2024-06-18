@@ -11,7 +11,8 @@ const progRefreshSecVar = 20;
 
 setTimeout(init, 50);
 
-let webGLCanvas, gl, w, h;
+let webGLCanvas, gl;
+let sz, outW, outH;
 let sweepArrays, sweepBufferInfo;
 let progiMain, progiOutputDraw;
 let txOutput0, txOutput1;
@@ -50,36 +51,41 @@ function updateRandomProgram() {
 function resizeWorld() {
 
   // Resize WebGL canvas
-  let sz = Math.min(window.innerWidth, window.innerHeight);
-  webGLCanvas.style.width = sz + "px";
-  webGLCanvas.style.height = sz + "px";
+  const pxW = window.innerWidth;
+  const pxH = window.innerHeight;
+  webGLCanvas.style.width = pxW + "px";
+  webGLCanvas.style.height = pxH + "px";
+
   const mul = devicePixelRatio;
-  w = webGLCanvas.width = Math.round(sz * mul);
-  h = webGLCanvas.height = Math.round(sz * mul);
+  outW = Math.round(pxW * mul);
+  outH = Math.round(pxH * mul);
+  webGLCanvas.width = outW;
+  webGLCanvas.height = outH;
+  sz = Math.min(outW, outH);
 
   // First pingpong output texture
-  const dtRender0 = new Uint8Array(w * h * 4);
+  const dtRender0 = new Uint8Array(sz * sz * 4);
   dtRender0.fill(0);
   if (txOutput0) gl.deleteTexture(txOutput0);
   txOutput0 = twgl.createTexture(gl, {
     internalFormat: gl.RGBA,
     format: gl.RGBA,
     type: gl.UNSIGNED_BYTE,
-    width: w,
-    height: h,
+    width: sz,
+    height: sz,
     src: dtRender0,
   });
 
   // Other pingpong output texture
-  const dtRender1 = new Uint8Array(w * h * 4);
+  const dtRender1 = new Uint8Array(sz * sz * 4);
   dtRender1.fill(0);
   if (txOutput1) gl.deleteTexture(txOutput1);
   txOutput1 = twgl.createTexture(gl, {
     internalFormat: gl.RGBA,
     format: gl.RGBA,
     type: gl.UNSIGNED_BYTE,
-    width: w,
-    height: h,
+    width: sz,
+    height: sz,
     src: dtRender1,
   });
 }
@@ -139,7 +145,7 @@ function frame(time) {
   const unisMain = {
     txPrev: txOutput0,
     txClip0: txImage,
-    resolution: [w, h],
+    resolution: [sz, sz],
     time: time,
   }
   for (let uniName in unis)
@@ -147,10 +153,10 @@ function frame(time) {
 
   // Bind frame buffer: texture to draw on
   let atmsPR = [{attachment: txOutput1}];
-  let fbufPR = twgl.createFramebufferInfo(gl, atmsPR, w, h);
+  let fbufPR = twgl.createFramebufferInfo(gl, atmsPR, sz, sz);
   twgl.bindFramebufferInfo(gl, fbufPR);
   // Set up size, program, uniforms
-  gl.viewport(0, 0, w, h);
+  gl.viewport(0, 0, sz, sz);
   gl.useProgram(progiMain.program);
   twgl.setBuffersAndAttributes(gl, progiMain, sweepBufferInfo);
   twgl.setUniforms(progiMain, unisMain);
@@ -163,10 +169,12 @@ function frame(time) {
   // Render txOutput1 to canvas
   const unisOutputDraw = {
     txOutput: txOutput1,
+    sz: sz,
+    outRes: [outW, outH],
   }
   twgl.bindFramebufferInfo(gl, null);
   // Set up size, program, uniforms
-  gl.viewport(0, 0, w, h);
+  gl.viewport(0, 0, outW, outH);
   gl.useProgram(progiOutputDraw.program);
   twgl.setBuffersAndAttributes(gl, progiOutputDraw, sweepBufferInfo);
   twgl.setUniforms(progiOutputDraw, unisOutputDraw);
